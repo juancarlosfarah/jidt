@@ -1426,6 +1426,21 @@ public class MatrixUtils {
         return data;
     }
 
+    /**
+     * Return true if an integer is contained in a array, false otherwise.
+     * @param array
+     * @param element
+     * @return
+     */
+    public static boolean contains(int[] array, int element) {
+        for (int item : array) {
+            if (item == element) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 	/**
 	 * Extract the required rows and columns from the matrix
 	 * 
