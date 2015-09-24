@@ -57,6 +57,10 @@ public class Input {
     public int getReducedBase() {
         return reducedBase;
     }
+    
+    public int getReducedArray() {
+        return reduced;
+    }
 
     @Override
     public String toString() {
