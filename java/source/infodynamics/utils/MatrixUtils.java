@@ -1376,6 +1376,37 @@ public class MatrixUtils {
 		return data;
 	}
 
+    /**
+     * Extract the required rows from the matrix
+     *
+     * @param matrix 2D data array
+     * @param fromRow index of the first row to return
+     * @param rows number of rows (including the first) to return
+     * @return a 2D data array of the selected rows
+     */
+    public static int[][] selectRows(int matrix[][], int fromRow, int rows) {
+        int[][] data = new int[rows][];
+        for (int rIndex = 0; rIndex < rows; rIndex++) {
+            data[rIndex] = matrix[rIndex + fromRow];
+        }
+        return data;
+    }
+
+    /**
+     * Extract the required rows from the matrix
+     *
+     * @param matrix 2D data array
+     * @param rows indices of the rows to select
+     * @return a 2D data array of the selected rows
+     */
+    public static int[][] selectRows(int matrix[][], int rows[]) {
+        int[][] data = new int[rows.length][];
+        for (int rIndex = 0; rIndex < rows.length; rIndex++) {
+                data[rIndex] = matrix[rows[rIndex]];
+        }
+        return data;
+    }
+
 	/**
 	 * Extract the required rows and columns from the matrix
 	 * 
