@@ -1,6 +1,4 @@
-package com.company;
-
-import infodynamics.utils.MatrixUtils;
+package infodynamics.utils;
 
 import java.util.Arrays;
 import java.util.HashMap;

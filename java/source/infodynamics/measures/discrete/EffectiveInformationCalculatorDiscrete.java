@@ -1,7 +1,7 @@
-package com.company;
+package infodynamics.measures.discrete;
 
-import infodynamics.measures.discrete.MutualInformationCalculatorDiscrete;
 import infodynamics.utils.MatrixUtils;
+import infodynamics.utils.Input;
 
 /**
  * Created by juancarlosfarah on 22/05/15.

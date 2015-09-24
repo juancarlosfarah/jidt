@@ -1,7 +1,4 @@
-package com.company;
-
-import infodynamics.measures.discrete.EntropyCalculatorDiscrete;
-import infodynamics.measures.discrete.MutualInformationCalculatorDiscrete;
+package infodynamics.measures.discrete;
 
 /**
  * Created by juancarlosfarah on 16/06/15.

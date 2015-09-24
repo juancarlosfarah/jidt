@@ -1,6 +1,5 @@
-package com.company;
+package infodynamics.measures.discrete;
 
-import infodynamics.measures.discrete.EntropyCalculatorDiscrete;
 import infodynamics.utils.MathsUtils;
 import infodynamics.utils.MatrixUtils;
 
