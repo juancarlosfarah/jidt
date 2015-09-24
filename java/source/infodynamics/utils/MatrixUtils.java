@@ -3941,4 +3941,42 @@ public class MatrixUtils {
 		}
 		return intArray;
 	}
+
+    /**
+     * Shuffle array in place using Fisher–Yates shuffle.
+     */
+    public static void shuffle(int[] array) {
+        Random rnd = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+
+            // Get new index (between 0 and i + 1).
+            int index = rnd.nextInt(i + 1);
+
+            // Swap elements at given indexes.
+            int a = array[index];
+            array[index] = array[i];
+            array[i] = a;
+        }
+    }
+
+    /**
+     * Shuffle 2D matrix using Fisher–Yates shuffle.
+     */
+    public static int[][] shuffle(int[][] matrix) {
+        matrix = transpose(matrix);
+        Random rnd = new Random();
+        for (int i = matrix.length - 1; i > 0; i--) {
+
+            // Get new index (between 0 and i + 1).
+            int index = rnd.nextInt(i + 1);
+
+            // Swap elements at given indexes.
+            int[] a = matrix[index];
+            matrix[index] = matrix[i];
+            matrix[i] = a;
+        }
+        matrix = transpose(matrix);
+        return matrix;
+    }
+
 }
