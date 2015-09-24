@@ -1407,6 +1407,25 @@ public class MatrixUtils {
         return data;
     }
 
+    /**
+     * Extract all but the specified rows from the matrix
+     *
+     * @param matrix 2D data array
+     * @param rows indices of the rows not to select
+     * @return a 2D data array of the selected rows
+     */
+    public static int[][] selectAllRowsExcept(int matrix[][], int rows[]) {
+        int[][] data = new int[matrix.length - rows.length][];
+        int index = 0;
+        for (int rIndex = 0; rIndex < matrix.length; rIndex++) {
+            if (!contains(rows, rIndex)) {
+                data[index] = matrix[rIndex];
+                index++;
+            }
+        }
+        return data;
+    }
+
 	/**
 	 * Extract the required rows and columns from the matrix
 	 * 
