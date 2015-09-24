@@ -58,7 +58,7 @@ public class Input {
         return reducedBase;
     }
     
-    public int getReducedArray() {
+    public int[] getReducedArray() {
         return reduced;
     }
 
