@@ -97,18 +97,28 @@ public class IntegratedInformationEmpiricalCalculatorDiscrete {
     public double computeNormalizationFactor(int[][] part1, int[][] part2) {
 
         // TODO: Fix EntropyCalculatorDiscrete for 2D inputs.
-        EntropyCalculatorDiscrete ecd = new EntropyCalculatorDiscrete(base);
-        ecd.initialise();
-        Input input = new Input(part1, base);
-        int[] p1 = input.getReducedArray();
-        ecd.addObservations(p1);
-        double entropy1 = ecd.computeAverageLocalOfObservations();
 
-        ecd.initialise();
-        input = new Input(part2, base);
-        int[] p2 = input.getReducedArray();
-        ecd.addObservations(p2);
-        double entropy2 = ecd.computeAverageLocalOfObservations();
+        // Prepare input for entropy calculator.
+        Input input1 = new Input(part1, base);
+        int[] p1 = input1.getReducedArray();
+        int rBase1 = input1.getReducedBase();
+
+        // Calculate entropy.
+        EntropyCalculatorDiscrete ecd1 = new EntropyCalculatorDiscrete(rBase1);
+        ecd1.initialise();
+        ecd1.addObservations(p1);
+        double entropy1 = ecd1.computeAverageLocalOfObservations();
+
+        // Prepare input for entropy calculator.
+        Input input2 = new Input(part2, base);
+        int[] p2 = input2.getReducedArray();
+        int rBase2 = input2.getReducedBase();
+
+        // Calculate entropy.
+        EntropyCalculatorDiscrete ecd2 = new EntropyCalculatorDiscrete(rBase2);
+        ecd2.initialise();
+        ecd2.addObservations(p2);
+        double entropy2 = ecd2.computeAverageLocalOfObservations();
 
         return Math.min(entropy1, entropy2);
 
