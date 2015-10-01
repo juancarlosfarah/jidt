@@ -35,7 +35,7 @@ public class EffectiveInformationCalculatorKraskov {
       double[][] paired1 = MatrixUtils.selectRows(data, tau, totalObservations - tau);
       mick = new MutualInfoCalculatorMultiVariateKraskov1();
       mick.initialise(dimensions, dimensions);
-      mick.addObservations(paired0, paired1);
+      mick.setObservations(paired0, paired1);
       systemMutualInformation = mick.computeAverageLocalOfObservations();
 
     } catch (Exception e) {
@@ -57,7 +57,7 @@ public class EffectiveInformationCalculatorKraskov {
       double[][] p1Paired1 = MatrixUtils.selectRows(part1, tau, totalObservations - tau);
       mick = new MutualInfoCalculatorMultiVariateKraskov1();
       mick.initialise(p1.length, p1.length);
-      mick.addObservations(p1Paired0, p1Paired1);
+      mick.setObservations(p1Paired0, p1Paired1);
       double p1Ei = mick.computeAverageLocalOfObservations();
       sum += p1Ei;
 
@@ -76,7 +76,7 @@ public class EffectiveInformationCalculatorKraskov {
       double[][] p2Paired1 = MatrixUtils.selectRows(part2, tau, totalObservations - tau);
       mick = new MutualInfoCalculatorMultiVariateKraskov1();
       mick.initialise(p2.length, p2.length);
-      mick.addObservations(p2Paired0, p2Paired1);
+      mick.setObservations(p2Paired0, p2Paired1);
       double p2Ei = mick.computeAverageLocalOfObservations();
       sum += p2Ei;
 

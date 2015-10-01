@@ -35,7 +35,7 @@ public class EffectiveInformationCalculatorGaussian {
       double[][] paired1 = MatrixUtils.selectRows(data, tau, totalObservations - tau);
       micg = new MutualInfoCalculatorMultiVariateGaussian();
       micg.initialise(dimensions, dimensions);
-      micg.addObservations(paired0, paired1);
+      micg.setObservations(paired0, paired1);
       systemMutualInformation = micg.computeAverageLocalOfObservations();
 
     } catch (Exception e) {
@@ -57,7 +57,7 @@ public class EffectiveInformationCalculatorGaussian {
       double[][] p1Paired1 = MatrixUtils.selectRows(part1, tau, totalObservations - tau);
       micg = new MutualInfoCalculatorMultiVariateGaussian();
       micg.initialise(p1.length, p1.length);
-      micg.addObservations(p1Paired0, p1Paired1);
+      micg.setObservations(p1Paired0, p1Paired1);
       double p1Ei = micg.computeAverageLocalOfObservations();
       sum += p1Ei;
 
@@ -76,7 +76,7 @@ public class EffectiveInformationCalculatorGaussian {
       double[][] p2Paired1 = MatrixUtils.selectRows(part2, tau, totalObservations - tau);
       micg = new MutualInfoCalculatorMultiVariateGaussian();
       micg.initialise(p2.length, p2.length);
-      micg.addObservations(p2Paired0, p2Paired1);
+      micg.setObservations(p2Paired0, p2Paired1);
       double p2Ei = micg.computeAverageLocalOfObservations();
       sum += p2Ei;
 
