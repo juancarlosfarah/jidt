@@ -29,8 +29,8 @@ public class IntegratedInformationCalculatorGaussian {
 
   public void addObservations(double[][] data) {
     this.data = MatrixUtils.transpose(data);
-    this.dimensions = data.length;
-      this.totalObservations = data[0].length;
+    this.dimensions = this.data[0].length;
+    this.totalObservations = this.data.length;
 
     if (dimensions > totalObservations) {
       System.out.printf("The number of dimensions is smaller than the number"+
