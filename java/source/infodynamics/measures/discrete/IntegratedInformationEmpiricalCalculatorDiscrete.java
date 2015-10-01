@@ -37,8 +37,8 @@ public class IntegratedInformationEmpiricalCalculatorDiscrete {
 
     public void computePossiblePartitions() {
         try {
-
-            for (int i = 1; i < data.length; i++) {
+            for (int i = 1; i <= Math.floor(data.length / 2); i++) {
+                System.out.println(i);
                 int[][] sets = MathsUtils.generateAllSets(data.length, i);
                 partitions.addAll(Arrays.asList(sets));
             }
