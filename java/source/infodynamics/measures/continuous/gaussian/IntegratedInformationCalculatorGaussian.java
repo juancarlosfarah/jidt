@@ -15,16 +15,16 @@ public class IntegratedInformationCalculatorGaussian {
   private double[][] data;
   private int totalObservations;
   private int dimensions;
-  public Set<int[]> partitions;
-  public int[][] minimumInformationPartition;
-  private double minimumInformationPartitionValue;
+  private Set<int[]> partitions;
+  private int[] minimumInformationPartition;
+  private int minimumInformationPartitionSize;
+  private double minimumInformationPartitionScore;
   private double mutualInformation;
 
   public IntegratedInformationCalculatorGaussian(int tau) {
     this.tau = tau;
     partitions = new HashSet<int[]>();
-    minimumInformationPartition = new int[2][];
-    minimumInformationPartitionValue = Double.POSITIVE_INFINITY;
+    minimumInformationPartitionScore = Double.POSITIVE_INFINITY;
   }
 
   public void addObservations(double[][] data) {
@@ -62,18 +62,10 @@ public class IntegratedInformationCalculatorGaussian {
       // of 0, which means that it doesn't tell us anything about the
       // rest of the system. Return 0 otherwise return normalised EI.
       double mipScore = (k == 0) ? 0 : ei / k;
-      if (mipScore < minimumInformationPartitionValue) {
-        minimumInformationPartition[0] = partition;
-        int[] partition2 = new int[data.length - partition.length];
-        int index = 0;
-        for (int i = 0; i < data.length; i++) {
-          if (!MatrixUtils.contains(partition, i)) {
-            partition2[index] = i;
-            index++;
-          }
-        }
-        minimumInformationPartition[1] = partition2;
-        minimumInformationPartitionValue = mipScore;
+      if (mipScore < minimumInformationPartitionScore) {
+        minimumInformationPartition = partition;
+        minimumInformationPartitionSize = partition.length;
+        minimumInformationPartitionScore = mipScore;
         integratedInformation = ei;
       }
     }
@@ -101,7 +93,8 @@ public class IntegratedInformationCalculatorGaussian {
     double entropy1 = 0, entropy2 = 0;
 
     try {
-      EntropyCalculatorMultiVariateGaussian ecg = new EntropyCalculatorMultiVariateGaussian();
+      EntropyCalculatorMultiVariateGaussian ecg =
+              new EntropyCalculatorMultiVariateGaussian();
       int dimensionsPart1 = part1.length;
       ecg.initialise(dimensionsPart1);
       ecg.setObservations(part1);
@@ -123,4 +116,11 @@ public class IntegratedInformationCalculatorGaussian {
     return mutualInformation;
   }
 
+  public int getMinimumInformationPartitionSize() {
+    return minimumInformationPartitionSize;
+  }
+
+  public int[] getMinimumInformationPartition() {
+    return minimumInformationPartition;
+  }
 }
