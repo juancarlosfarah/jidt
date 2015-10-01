@@ -28,8 +28,8 @@ public class IntegratedInformationCalculatorKraskov {
 
   public void addObservations(double[][] data) {
     this.data = MatrixUtils.transpose(data);
-    this.totalObservations = data.length;
-    this.dimensions = data[0].length;
+    this.dimensions = data.length;
+    this.totalObservations = data[0].length;
 
     if (dimensions > totalObservations) {
       System.out.printf("The number of dimensions is smaller than the number"+
