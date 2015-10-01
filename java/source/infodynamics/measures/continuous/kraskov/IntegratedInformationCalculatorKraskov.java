@@ -14,16 +14,16 @@ public class IntegratedInformationCalculatorKraskov {
   private double[][] data;
   private int totalObservations;
   private int dimensions;
-  public Set<int[]> partitions;
-  public int[][] minimumInformationPartition;
-  private double minimumInformationPartitionValue;
+  private Set<int[]> partitions;
+  private int[] minimumInformationPartition;
+  private int minimumInformationPartitionSize;
+  private double minimumInformationPartitionScore;
   private double mutualInformation;
 
   public IntegratedInformationCalculatorKraskov(int tau) {
     this.tau = tau;
     partitions = new HashSet<int[]>();
-    minimumInformationPartition = new int[2][];
-    minimumInformationPartitionValue = Double.POSITIVE_INFINITY;
+    minimumInformationPartitionScore = Double.POSITIVE_INFINITY;
   }
 
   public void addObservations(double[][] data) {
@@ -61,19 +61,11 @@ public class IntegratedInformationCalculatorKraskov {
       // of 0, which means that it doesn't tell us anything about the
       // rest of the system. Return 0 otherwise return normalised EI.
       double mipScore = (k == 0) ? 0 : ei / k;
-      if (mipScore < minimumInformationPartitionValue) {
-        minimumInformationPartition[0] = partition;
-        int[] partition2 = new int[data.length - partition.length];
-        int index = 0;
-        for (int i = 0; i < data.length; i++) {
-          if (!MatrixUtils.contains(partition, i)) {
-            partition2[index] = i;
-            index++;
-          }
-        }
-        minimumInformationPartition[1] = partition2;
-        minimumInformationPartitionValue = mipScore;
-        integratedInformation = ei;
+        if (mipScore < minimumInformationPartitionScore) {
+          minimumInformationPartition = partition;
+          minimumInformationPartitionSize = partition.length;
+          minimumInformationPartitionScore = mipScore;
+          integratedInformation = ei;
       }
     }
     return integratedInformation;
@@ -96,7 +88,8 @@ public class IntegratedInformationCalculatorKraskov {
   }
 
   public double computeNormalizationFactor(double[][] part1, double[][] part2) {
-    EntropyCalculatorMultiVariateKozachenko eck = new EntropyCalculatorMultiVariateKozachenko();
+    EntropyCalculatorMultiVariateKozachenko eck =
+            new EntropyCalculatorMultiVariateKozachenko();
     int dimensionsPart1 = part1.length;
     eck.initialise(dimensionsPart1);
     eck.setObservations(part1);
@@ -110,6 +103,14 @@ public class IntegratedInformationCalculatorKraskov {
 
   public double getMutualInformation() {
     return mutualInformation;
+  }
+
+  public int getMinimumInformationPartitionSize() {
+    return minimumInformationPartitionSize;
+  }
+
+  public int[] getMinimumInformationPartition() {
+    return minimumInformationPartition;
   }
 
 }
