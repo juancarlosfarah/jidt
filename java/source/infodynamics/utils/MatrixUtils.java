@@ -1723,6 +1723,20 @@ public class MatrixUtils {
         }
     }
 
+    /**
+     * Inserts a given vector into the given column index of the given matrix.
+     * @param inputValues
+     * @param matrix
+     * @param column
+     */
+    public static void insertVectorIntoMatrix(double[] inputValues,
+                                              double[][] matrix,
+                                              int column) {
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i][column] = inputValues[i];
+        }
+    }
+
 	/**
 	 * Return data[x][y]:
 	 *  - y==0: inputValues[x][0]
