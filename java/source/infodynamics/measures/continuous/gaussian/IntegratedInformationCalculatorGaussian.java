@@ -40,8 +40,8 @@ public class IntegratedInformationCalculatorGaussian {
 
   public void computePossiblePartitions() {
     try {
-      for (int i = 1; i < data.length; i++) {
-        int[][] sets = MathsUtils.generateAllSets(data.length, i);
+      for (int i = 1; i < Math.floor(dimensions/2); i++) {
+        int[][] sets = MathsUtils.generateAllSets(dimensions, i);
         partitions.addAll(Arrays.asList(sets));
       }
     } catch (Exception e) {
@@ -95,12 +95,12 @@ public class IntegratedInformationCalculatorGaussian {
     try {
       EntropyCalculatorMultiVariateGaussian ecg =
               new EntropyCalculatorMultiVariateGaussian();
-      int dimensionsPart1 = part1.length;
+      int dimensionsPart1 = part1[0].length;
       ecg.initialise(dimensionsPart1);
       ecg.setObservations(part1);
       entropy1 = ecg.computeAverageLocalOfObservations();
 
-      int dimensionsPart2 = part2.length;
+      int dimensionsPart2 = part2[0].length;
       ecg.initialise(dimensionsPart2);
       ecg.setObservations(part2);
       entropy2 = ecg.computeAverageLocalOfObservations();
