@@ -17,9 +17,10 @@ public class IntegratedInformationEmpiricalCalculatorDiscrete {
     private int base;
     private int tau;
     private int[][] data;
-    public Set<int[]> partitions;
-    public int[][] minimumInformationPartition;
-    private double minimumInformationPartitionValue;
+    private Set<int[]> partitions;
+    private int[] minimumInformationPartition;
+    private int minimumInformationPartitionSize;
+    private double minimumInformationPartitionScore;
     private double mutualInformation;
 
 
@@ -27,8 +28,7 @@ public class IntegratedInformationEmpiricalCalculatorDiscrete {
         this.base = base;
         this.tau = tau;
         partitions = new HashSet<int[]>();
-        minimumInformationPartition = new int[2][];
-        minimumInformationPartitionValue = Double.POSITIVE_INFINITY;
+        minimumInformationPartitionScore = Double.POSITIVE_INFINITY;
     }
 
     public void addObservations(int[][] data) {
@@ -66,18 +66,10 @@ public class IntegratedInformationEmpiricalCalculatorDiscrete {
             // rest of the system. Return 0 otherwise return normalised EI.
             double mipScore = (k == 0) ? 0 : ei / k;
 
-            if (mipScore < minimumInformationPartitionValue) {
-                minimumInformationPartition[0] = partition;
-                int[] partition2 = new int[data.length - partition.length];
-                int index = 0;
-                for (int i = 0; i < data.length; i++) {
-                    if (!MatrixUtils.contains(partition, i)) {
-                        partition2[index] = i;
-                        index++;
-                    }
-                }
-                minimumInformationPartition[1] = partition2;
-                minimumInformationPartitionValue = mipScore;
+            if (mipScore < minimumInformationPartitionScore) {
+                minimumInformationPartition = partition;
+                minimumInformationPartitionSize = partition.length;
+                minimumInformationPartitionScore = mipScore;
                 integratedInformation = ei;
             }
 
@@ -126,6 +118,14 @@ public class IntegratedInformationEmpiricalCalculatorDiscrete {
 
     public double getMutualInformation() {
         return mutualInformation;
+    }
+
+    public int getMinimumInformationPartitionSize() {
+        return minimumInformationPartitionSize;
+    }
+
+    public int[] getMinimumInformationPartition() {
+        return minimumInformationPartition;
     }
 
 }
