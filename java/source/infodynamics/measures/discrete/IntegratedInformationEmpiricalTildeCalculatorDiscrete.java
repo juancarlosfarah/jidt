@@ -1,5 +1,6 @@
 package infodynamics.measures.discrete;
 
+import infodynamics.utils.Input;
 import infodynamics.utils.MathsUtils;
 import infodynamics.utils.MatrixUtils;
 
@@ -16,17 +17,17 @@ public class IntegratedInformationEmpiricalTildeCalculatorDiscrete {
     private int base;
     private int tau;
     private int[][] data;
-    public Set<int[]> partitions;
-    public int[][] minimumInformationPartition;
-    private double minimumInformationPartitionValue;
+    private Set<int[]> partitions;
+    private int[] minimumInformationPartition;
+    private int minimumInformationPartitionSize;
+    private double minimumInformationPartitionScore;
 
 
     public IntegratedInformationEmpiricalTildeCalculatorDiscrete(int base, int tau) {
         this.base = base;
         this.tau = tau;
         partitions = new HashSet<int[]>();
-        minimumInformationPartition = new int[2][];
-        minimumInformationPartitionValue = Double.POSITIVE_INFINITY;
+        minimumInformationPartitionScore = Double.POSITIVE_INFINITY;
     }
 
     public void addObservations(int[][] data) {
@@ -49,7 +50,6 @@ public class IntegratedInformationEmpiricalTildeCalculatorDiscrete {
     public double compute() {
 
         double integratedInformation = 0.0;
-
         StochasticInteractionCalculatorDiscrete sicd;
         sicd = new StochasticInteractionCalculatorDiscrete(base, tau);
         sicd.addObservations(data);
@@ -65,18 +65,10 @@ public class IntegratedInformationEmpiricalTildeCalculatorDiscrete {
             // rest of the system. Return 0 otherwise return normalised SI.
             double mipScore = (k == 0) ? 0 : si / k;
 
-            if (mipScore < minimumInformationPartitionValue) {
-                minimumInformationPartition[0] = partition;
-                int[] partition2 = new int[data.length - partition.length];
-                int index = 0;
-                for (int i = 0; i < data.length; i++) {
-                    if (!MatrixUtils.contains(partition, i)) {
-                        partition2[index] = i;
-                        index++;
-                    }
-                }
-                minimumInformationPartition[1] = partition2;
-                minimumInformationPartitionValue = mipScore;
+            if (mipScore < minimumInformationPartitionScore) {
+                minimumInformationPartition = partition;
+                minimumInformationPartitionSize = partition.length;
+                minimumInformationPartitionScore = mipScore;
                 integratedInformation = si;
             }
 
@@ -95,17 +87,40 @@ public class IntegratedInformationEmpiricalTildeCalculatorDiscrete {
 
     public double computeNormalizationFactor(int[][] part1, int[][] part2) {
 
-        EntropyCalculatorDiscrete ecd = new EntropyCalculatorDiscrete(base);
-        ecd.initialise();
-        ecd.addObservations(part1);
-        double entropy1 = ecd.computeAverageLocalOfObservations();
+        // TODO: Fix EntropyCalculatorDiscrete for 2D inputs.
 
-        ecd.initialise();
-        ecd.addObservations(part2);
-        double entropy2 = ecd.computeAverageLocalOfObservations();
+        // Prepare input for entropy calculator.
+        Input input1 = new Input(part1, base);
+        int[] p1 = input1.getReducedArray();
+        int rBase1 = input1.getReducedBase();
+
+        // Calculate entropy.
+        EntropyCalculatorDiscrete ecd1 = new EntropyCalculatorDiscrete(rBase1);
+        ecd1.initialise();
+        ecd1.addObservations(p1);
+        double entropy1 = ecd1.computeAverageLocalOfObservations();
+
+        // Prepare input for entropy calculator.
+        Input input2 = new Input(part2, base);
+        int[] p2 = input2.getReducedArray();
+        int rBase2 = input2.getReducedBase();
+
+        // Calculate entropy.
+        EntropyCalculatorDiscrete ecd2 = new EntropyCalculatorDiscrete(rBase2);
+        ecd2.initialise();
+        ecd2.addObservations(p2);
+        double entropy2 = ecd2.computeAverageLocalOfObservations();
 
         return Math.min(entropy1, entropy2);
 
+    }
+
+    public int getMinimumInformationPartitionSize() {
+        return minimumInformationPartitionSize;
+    }
+
+    public int[] getMinimumInformationPartition() {
+        return minimumInformationPartition;
     }
 
 }
