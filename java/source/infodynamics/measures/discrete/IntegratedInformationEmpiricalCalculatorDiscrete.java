@@ -1,5 +1,6 @@
 package infodynamics.measures.discrete;
 
+import infodynamics.utils.Input;
 import infodynamics.utils.MathsUtils;
 import infodynamics.utils.MatrixUtils;
 
@@ -95,13 +96,18 @@ public class IntegratedInformationEmpiricalCalculatorDiscrete {
 
     public double computeNormalizationFactor(int[][] part1, int[][] part2) {
 
+        // TODO: Fix EntropyCalculatorDiscrete for 2D inputs.
         EntropyCalculatorDiscrete ecd = new EntropyCalculatorDiscrete(base);
         ecd.initialise();
-        ecd.addObservations(part1);
+        Input input = new Input(part1, base);
+        int[] p1 = input.getReducedArray();
+        ecd.addObservations(p1);
         double entropy1 = ecd.computeAverageLocalOfObservations();
 
         ecd.initialise();
-        ecd.addObservations(part2);
+        input = new Input(part2, base);
+        int[] p2 = input.getReducedArray();
+        ecd.addObservations(p2);
         double entropy2 = ecd.computeAverageLocalOfObservations();
 
         return Math.min(entropy1, entropy2);
