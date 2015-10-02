@@ -1,6 +1,7 @@
 package infodynamics.measures.continuous.gaussian;
 import infodynamics.measures.continuous.gaussian.MutualInfoCalculatorMultiVariateGaussian;
 import infodynamics.utils.MatrixUtils;
+import infodynamics.utils.NonPositiveDefiniteMatrixException;
 
 /**
 * Created by pmediano on 26/09/15.
@@ -37,6 +38,9 @@ public class EffectiveInformationCalculatorGaussian {
       micg.initialise(dimensions, dimensions);
       micg.setObservations(paired0, paired1);
       systemMutualInformation = micg.computeAverageLocalOfObservations();
+
+    } catch (NonPositiveDefiniteMatrixException e) {
+      return Double.NaN;
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -82,6 +86,10 @@ public class EffectiveInformationCalculatorGaussian {
 
       // Subtract sum of MI of partitions from the MI of system.
       rvalue = systemMutualInformation - sum;
+
+    } catch (NonPositiveDefiniteMatrixException e) {
+      return Double.NaN;
+
     } catch (Exception e) {
       e.printStackTrace();
     }
