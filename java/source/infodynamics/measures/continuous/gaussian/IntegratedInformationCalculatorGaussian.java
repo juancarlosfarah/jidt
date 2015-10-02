@@ -58,10 +58,12 @@ public class IntegratedInformationCalculatorGaussian {
     for (int[] partition : partitions) {
       double k = computeNormalizationFactor(partition);
       double ei = eicg.computeForBipartition(partition);
+
       // If k = 0, it means that one of the partitions has an entropy
       // of 0, which means that it doesn't tell us anything about the
       // rest of the system. Return 0 otherwise return normalised EI.
-      double mipScore = (k == 0) ? 0 : ei / k;
+      double mipScore = (k == 0 || Double.isNaN(ei)) ? 0 : ei / k;
+
       if (mipScore < minimumInformationPartitionScore) {
         minimumInformationPartition = partition;
         minimumInformationPartitionSize = partition.length;
