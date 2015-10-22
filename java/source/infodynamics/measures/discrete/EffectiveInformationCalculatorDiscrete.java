@@ -7,22 +7,15 @@ import infodynamics.utils.Input;
  * Created by juancarlosfarah on 22/05/15.
  *
  */
-public class EffectiveInformationCalculatorDiscrete {
-    int[][] data;
-    int base;
-    int tau;
-    double systemMutualInformation;
+public class EffectiveInformationCalculatorDiscrete
+       extends EffectiveMeasureCalculatorDiscrete {
 
     public EffectiveInformationCalculatorDiscrete(int base, int tau) {
-        this.base = base;
-        this.tau = tau;
+        super(base, tau);
     }
 
-    public void addObservations(int[][] states) {
-        data = states;
-    }
-
-    public double computeMutualInformationForSystem() {
+    // TODO: Refactor this out to EffectiveMeasureCalculatorDiscrete.
+    public double computeForSystem() {
 
         try {
             MutualInformationCalculatorDiscrete micd;
@@ -34,16 +27,17 @@ public class EffectiveInformationCalculatorDiscrete {
             micd = new MutualInformationCalculatorDiscrete(sysBase, 0);
             micd.initialise();
             micd.addObservations(sysPaired[0], sysPaired[1]);
-            systemMutualInformation = micd.computeAverageLocalOfObservations();
+            systemInformation = micd.computeAverageLocalOfObservations();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return systemMutualInformation;
+        return systemInformation;
     }
 
-    public double computeForBipartition(int[] p1) {
+    // TODO: Refactor this out to EffectiveMeasureCalculatorDiscrete.
+    public double computeForPartition(int[] p1) {
         double rvalue = 0.0;
 
         try {
@@ -75,7 +69,7 @@ public class EffectiveInformationCalculatorDiscrete {
             sum += p2Ei;
 
             // Subtract sum of MI of partitions from the MI of system.
-            rvalue = systemMutualInformation - sum;
+            rvalue = systemInformation - sum;
 
         } catch (Exception e) {
             e.printStackTrace();
