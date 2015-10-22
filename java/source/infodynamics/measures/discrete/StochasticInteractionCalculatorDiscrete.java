@@ -7,22 +7,18 @@ import infodynamics.utils.Input;
  * Created by juancarlosfarah on 22/05/15.
  *
  */
-public class StochasticInteractionCalculatorDiscrete {
-    int[][] data;
-    int base;
-    int tau;
-    double systemConditionalEntropy;
+public class StochasticInteractionCalculatorDiscrete
+       extends EffectiveMeasureCalculatorDiscrete {
 
     public StochasticInteractionCalculatorDiscrete(int base, int tau) {
-        this.base = base;
-        this.tau = tau;
+        super(base, tau);
     }
 
     public void addObservations(int[][] states) {
         data = states;
     }
 
-    public double computeConditionalEntropyForSystem() {
+    public double computeForSystem() {
 
         try {
             ConditionalEntropyCalculatorDiscrete cecd;
@@ -33,16 +29,16 @@ public class StochasticInteractionCalculatorDiscrete {
             int[][] sysPaired = sys.pair(tau);
             cecd = new ConditionalEntropyCalculatorDiscrete(sysBase);
             cecd.addObservations(sysPaired[0], sysPaired[1]);
-            systemConditionalEntropy = cecd.compute();
+            systemInformation = cecd.compute();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return systemConditionalEntropy;
+        return systemInformation;
     }
 
-    public double computeForBipartition(int[] p1) {
+    public double computeForPartition(int[] p1) {
         double rvalue = 0.0;
 
         try {
@@ -72,7 +68,7 @@ public class StochasticInteractionCalculatorDiscrete {
             sum += p2Ei;
 
             // Subtract sum of MI of partitions from the MI of system.
-            rvalue = sum - systemConditionalEntropy;
+            rvalue = sum - systemInformation;
 
         } catch (Exception e) {
             e.printStackTrace();

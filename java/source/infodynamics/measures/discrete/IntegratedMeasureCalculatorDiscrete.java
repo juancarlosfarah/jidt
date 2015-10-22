@@ -9,25 +9,75 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by juancarlosfarah on 22/05/15.
+ * <p>
+ * Base class for our integrated information measure calculators on discrete
+ * (int[]) data, providing common functionality for user-level measure classes.
+ * </p>
  *
+ * <p>
+ * Usage of the child classes extending this class is intended to follow this
+ * paradigm:
+ * </p>
+ * <ol>
+ * 		<li>Construct the calculator;</li>
+ * </ol>
+ *
+ * @author Juan Carlos Farah (<a href="farah.juancarlos at gmail.com">email</a>,
+ * <a href="http://juancarlosfarah.com/">www</a>)
  */
-public class IntegratedInformationEmpiricalTildeCalculatorDiscrete {
+public abstract class IntegratedMeasureCalculatorDiscrete {
 
-    private int base;
-    private int tau;
-    private int[][] data;
-    private Set<int[]> partitions;
-    private int[] minimumInformationPartition;
-    private int minimumInformationPartitionSize;
-    private double minimumInformationPartitionScore;
+    /**
+     * Number of available quantised states for each variable
+     * (ie binary is base-2).
+     */
+    protected int base;
+    /**
+     * Time step.
+     */
+    protected int tau;
+    /**
+     * Data.
+     */
+    protected int[][] data;
+    /**
+     * Set of all partitions (in our case bipartitions
+     * for efficiency's sake) that the system can have.
+     */
+    protected Set<int[]> partitions;
+    /**
+     * Stores the indexes of the variables making
+     * up the minimum information partition (MIP).
+     */
+    protected int[] minimumInformationPartition;
+    /**
+     * Stores the size of the MIP.
+     */
+    protected int minimumInformationPartitionSize;
+    /**
+     * Initialise the MIP score to positive infinity so that you return
+     * the minimum score as scores for partitions start coming in.
+     */
+    protected double minimumInformationPartitionScore = Double.POSITIVE_INFINITY;
+    /**
+     * Stores the value of basic information measure (mutual information
+     * or conditional entropy) for the system so that it can be reused.
+     */
+    protected double systemInformation;
+    /**
+     * Calculator to base the integrated measure on.
+     */
+    protected EffectiveMeasureCalculatorDiscrete baseCalculator;
 
-
-    public IntegratedInformationEmpiricalTildeCalculatorDiscrete(int base, int tau) {
+    /**
+     * Constructor.
+     * @param base
+     * @param tau
+     */
+    protected IntegratedMeasureCalculatorDiscrete(int base, int tau) {
         this.base = base;
         this.tau = tau;
         partitions = new HashSet<int[]>();
-        minimumInformationPartitionScore = Double.POSITIVE_INFINITY;
     }
 
     public void addObservations(int[][] data) {
@@ -36,12 +86,10 @@ public class IntegratedInformationEmpiricalTildeCalculatorDiscrete {
 
     public void computePossiblePartitions() {
         try {
-
-            for (int i = 1; i < data.length; i++) {
+            for (int i = 1; i <= Math.floor(data.length / 2); i++) {
                 int[][] sets = MathsUtils.generateAllSets(data.length, i);
                 partitions.addAll(Arrays.asList(sets));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,26 +98,24 @@ public class IntegratedInformationEmpiricalTildeCalculatorDiscrete {
     public double compute() {
 
         double integratedInformation = 0.0;
-        StochasticInteractionCalculatorDiscrete sicd;
-        sicd = new StochasticInteractionCalculatorDiscrete(base, tau);
-        sicd.addObservations(data);
-        sicd.computeConditionalEntropyForSystem();
+        baseCalculator.addObservations(data);
+        systemInformation = baseCalculator.computeForSystem();
 
         for (int[] partition : partitions) {
 
             double k = computeNormalizationFactor(partition);
-            double si = sicd.computeForBipartition(partition);
+            double ei = baseCalculator.computeForPartition(partition);
 
             // If k = 0, it means that one of the partitions has an entropy
             // of 0, which means that it doesn't tell us anything about the
-            // rest of the system. Return 0 otherwise return normalised SI.
-            double mipScore = (k == 0) ? 0 : si / k;
+            // rest of the system. Return 0 otherwise return normalised EI.
+            double mipScore = (k == 0) ? 0 : ei / k;
 
             if (mipScore < minimumInformationPartitionScore) {
                 minimumInformationPartition = partition;
                 minimumInformationPartitionSize = partition.length;
                 minimumInformationPartitionScore = mipScore;
-                integratedInformation = si;
+                integratedInformation = ei;
             }
 
         }
@@ -113,6 +159,10 @@ public class IntegratedInformationEmpiricalTildeCalculatorDiscrete {
 
         return Math.min(entropy1, entropy2);
 
+    }
+
+    public double getSystemInformation() {
+        return systemInformation;
     }
 
     public int getMinimumInformationPartitionSize() {
