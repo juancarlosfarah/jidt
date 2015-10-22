@@ -40,7 +40,7 @@ public class IntegratedInformationCalculatorGaussian {
 
   public void computePossiblePartitions() {
     try {
-      for (int i = 1; i < Math.floor(dimensions/2); i++) {
+      for (int i = 1; i <= Math.floor(dimensions/2); i++) {
         int[][] sets = MathsUtils.generateAllSets(dimensions, i);
         partitions.addAll(Arrays.asList(sets));
       }
@@ -55,6 +55,7 @@ public class IntegratedInformationCalculatorGaussian {
     eicg = new EffectiveInformationCalculatorGaussian(tau);
     eicg.addObservations(data);
     mutualInformation = eicg.computeMutualInformationForSystem();
+
     for (int[] partition : partitions) {
       double k = computeNormalizationFactor(partition);
       double ei = eicg.computeForBipartition(partition);

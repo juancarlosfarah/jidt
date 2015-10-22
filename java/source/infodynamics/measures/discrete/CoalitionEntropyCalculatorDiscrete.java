@@ -1,4 +1,4 @@
-package com.company;
+package infodynamics.measures.discrete;
 
 import infodynamics.utils.MatrixUtils;
 

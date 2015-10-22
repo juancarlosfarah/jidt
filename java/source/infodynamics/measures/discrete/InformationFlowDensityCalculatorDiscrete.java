@@ -137,7 +137,7 @@ public class InformationFlowDensityCalculatorDiscrete {
         Input input1 = new Input(MatrixUtils.transpose(data), base);
         int rBase = input1.getReducedBase();
         int[] rArray = input1.getReducedArray();
-        EntropyRateCalculatorDiscrete ercd = new EntropyRateCalculatorDiscrete(base, tau);
+        EntropyRateCalculatorDiscrete ercd = new EntropyRateCalculatorDiscrete(rBase, tau);
         ercd.addObservations(rArray);
         GER = ercd.computeAverageLocalOfObservations();
         isGERcomputed = true;

@@ -169,6 +169,22 @@ public class MultiInformationCalculatorDiscrete extends InfoMeasureCalculatorDis
 			}
 		}
 	}
+
+  // PEDRO: create this method
+  public void addObservations(int[][] states) {
+    for (int t = 0; t < states.length; t++) {
+      int jointValue = 0;
+      for (int c = 0; c < states[t].length; c++) {
+        int thisValue = states[t][c];
+        marginalCounts[c][thisValue]++;
+        jointValue *= base;
+        jointValue += thisValue;
+      }
+      observations++;
+      jointCount[jointValue]++;
+    }
+    return;
+  }
 	
 	@Override
 	public double computeAverageLocalOfObservations() {

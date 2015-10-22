@@ -39,7 +39,7 @@ public class IntegratedInformationCalculatorKraskov {
 
   public void computePossiblePartitions() {
     try {
-      for (int i = 1; i < Math.floor(dimensions/2); i++) {
+      for (int i = 1; i <= Math.floor(dimensions/2); i++) {
         int[][] sets = MathsUtils.generateAllSets(dimensions, i);
         partitions.addAll(Arrays.asList(sets));
       }
@@ -88,6 +88,7 @@ public class IntegratedInformationCalculatorKraskov {
   }
 
   public double computeNormalizationFactor(double[][] part1, double[][] part2) {
+
     EntropyCalculatorMultiVariateKozachenko eck =
             new EntropyCalculatorMultiVariateKozachenko();
     int dimensionsPart1 = part1[0].length;

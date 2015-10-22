@@ -138,6 +138,13 @@
 	***********************************
 	-->
 
+  <!-- Compile and jar the toolkit with debug symbols -->
+  <target name="debug" depends="init" description="compile and jar with debug symbols">
+    <echo message="Compiling for debug"/>
+    <javac srcdir="${src}" destdir="${bin}" includeAntRuntime="false" target="1.6" source="1.6" debug="true"/>
+    <jar jarfile="${jarplainname}" basedir="${bin}"/>
+  </target>
+
 	<!-- Developer build - creates readme and version files -->
 	<target name="readmefiles" description="developer: create the readme and version files from templates">
 		<tstamp>

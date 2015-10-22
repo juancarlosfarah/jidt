@@ -67,11 +67,11 @@ public class NeuralComplexityCalculatorDiscrete {
                 micd.initialise();
 
                 int[][] part1 = MatrixUtils.selectColumns(data, idx);
-                Input partition1 = new Input(part1, base);
+                Input partition1 = new Input(MatrixUtils.transpose(part1), base);
                 int[] var1 = partition1.getReducedArray();
 
                 int[][] part2 = MatrixUtils.selectColumns(data, allExcept(idx, numVars));
-                Input partition2 = new Input(part2, base);
+                Input partition2 = new Input(MatrixUtils.transpose(part2), base);
                 int[] var2 = partition2.getReducedArray();
 
                 micd.addObservations(var1, var2);
