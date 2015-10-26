@@ -17,5 +17,11 @@ public class IntegratedSynergyCalculatorDiscrete
         baseCalculator = new EffectiveSynergyCalculatorDiscrete(base, tau);
     }
 
+    @Override
+    public double computeNormalizationFactor(int[][] part1, int[][] part2) {
+      // Griffith psi doesn't need normalization factor
+      return 1;
+    }
+
 }
 

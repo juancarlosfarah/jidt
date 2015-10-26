@@ -86,6 +86,7 @@ public abstract class IntegratedMeasureCalculatorDiscrete {
 
     public void computePossiblePartitions() {
         try {
+            partitions.clear();
             for (int i = 1; i <= Math.floor(data.length / 2); i++) {
                 int[][] sets = MathsUtils.generateAllSets(data.length, i);
                 partitions.addAll(Arrays.asList(sets));
@@ -98,6 +99,7 @@ public abstract class IntegratedMeasureCalculatorDiscrete {
     public double compute() {
 
         double integratedInformation = 0.0;
+        minimumInformationPartitionScore = Double.POSITIVE_INFINITY;
         baseCalculator.addObservations(data);
         systemInformation = baseCalculator.computeForSystem();
 
@@ -119,6 +121,7 @@ public abstract class IntegratedMeasureCalculatorDiscrete {
             }
 
         }
+
         return integratedInformation;
     }
 
@@ -134,6 +137,7 @@ public abstract class IntegratedMeasureCalculatorDiscrete {
     public double computeNormalizationFactor(int[][] part1, int[][] part2) {
 
         // TODO: Fix EntropyCalculatorDiscrete for 2D inputs.
+        // TODO: @juancarlosfarah Wasn't this fixed with getReducedArray?
 
         // Prepare input for entropy calculator.
         Input input1 = new Input(part1, base);

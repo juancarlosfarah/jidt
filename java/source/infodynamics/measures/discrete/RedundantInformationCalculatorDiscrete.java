@@ -30,8 +30,7 @@ import infodynamics.measures.discrete.MutualInformationCalculatorDiscrete;
  * 	Embodied Cognitive Systems' (2011).</li>
  * </ul>
  * 
- * @author Joseph Lizier (<a href="joseph.lizier at gmail.com">email</a>,
- * <a href="http://lizier.me/joseph/">www</a>)
+ * @author Pedro Mediano
  */
 public class RedundantInformationCalculatorDiscrete {
 
