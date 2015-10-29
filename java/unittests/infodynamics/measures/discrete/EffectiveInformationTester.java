@@ -1,0 +1,72 @@
+package infodynamics.measures.discrete;
+
+import infodynamics.utils.RandomGenerator;
+import junit.framework.TestCase;
+import java.util.Arrays;
+
+/**
+ * @author Juan Carlos Farah (<a href="farah.juancarlos at gmail.com">email</a>,
+ * <a href="http://juancarlosfarah.com/">www</a>)
+ */
+public class EffectiveInformationTester extends TestCase {
+
+    public void testAddObservations() {
+
+        int[] var0 = { 0, 0, 0, 0, 0, 1, 1, 0, 0, 1 };
+        int[] var1 = { 1, 1, 1, 0, 0, 1, 1, 0, 0, 1 };
+        int[] var2 = { 1, 1, 1, 0, 0, 1, 1, 0, 0, 1 };
+        int[] var3 = { 0, 0, 1, 0, 1, 1, 1, 0, 0, 1 };
+        int[] var4 = { 1, 1, 1, 0, 1, 0, 1, 1, 0, 1 };
+        int[] var5 = { 0, 0, 1, 0, 1, 1, 1, 0, 0, 1 };
+        int[][] states0 = {var0, var1, var2, var3, var4, var5};
+        int tau = 1;
+        EffectiveInformationCalculatorDiscrete eicd;
+        eicd = new EffectiveInformationCalculatorDiscrete(2, tau);
+        eicd.addObservations(states0);
+        int[][] states1 = eicd.getData();
+
+        assertTrue(Arrays.equals(states0, states1));
+    }
+
+    public void testGenerativeModel() {
+        // Example adapted from Wikipedia article on IIT.
+        // https://en.wikipedia.org/wiki/Integrated_information_theory
+
+        // Generate model.
+        RandomGenerator rg = new RandomGenerator();
+        int duration = 1000000;
+
+        int[] var0a = rg.generateRandomInts(duration, 2);
+        var0a[0] = 0;
+        int[] var1a = new int[duration];
+        var1a[0] = 0;
+        System.arraycopy(var0a, 0, var1a, 1, duration - 1);
+        int[][] states = {var0a, var1a};
+
+        int tau = 1;
+        EffectiveInformationCalculatorDiscrete eicd;
+        eicd = new EffectiveInformationCalculatorDiscrete(2, tau);
+        eicd.addObservations(states);
+
+        // The MI and effective information for this model should be very close
+        // to 1, but there is a margin of error that needs to be considered.
+        double marginOfError = 0.001;
+
+        // Calculate mutual information for system.
+        double system = eicd.computeForSystem();
+        double diffMi = Math.abs(system - 1);
+        assertTrue(diffMi < marginOfError);
+
+        // Calculate EI for each partition.
+        int[] p0 = {0};
+        int[] p1 = {1};
+        double o0 = eicd.computeForPartition(p0);
+        double o1 = eicd.computeForPartition(p1);
+        double diffEi0 = Math.abs(o0 - 1);
+        double diffEi1 = Math.abs(o1 - 1);
+        assertTrue(diffEi0 < marginOfError);
+        assertTrue(diffEi1 < marginOfError);
+
+    }
+
+}

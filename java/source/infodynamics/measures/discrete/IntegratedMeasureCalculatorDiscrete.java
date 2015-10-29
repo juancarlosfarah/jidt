@@ -137,7 +137,6 @@ public abstract class IntegratedMeasureCalculatorDiscrete {
     public double computeNormalizationFactor(int[][] part1, int[][] part2) {
 
         // TODO: Fix EntropyCalculatorDiscrete for 2D inputs.
-        // TODO: @juancarlosfarah Wasn't this fixed with getReducedArray?
 
         // Prepare input for entropy calculator.
         Input input1 = new Input(part1, base);
@@ -175,6 +174,14 @@ public abstract class IntegratedMeasureCalculatorDiscrete {
 
     public int[] getMinimumInformationPartition() {
         return minimumInformationPartition;
+    }
+
+    /**
+     * Returns observations added to the calculator.
+     * @return data
+     */
+    public int[][] getData() {
+        return data;
     }
 
 }

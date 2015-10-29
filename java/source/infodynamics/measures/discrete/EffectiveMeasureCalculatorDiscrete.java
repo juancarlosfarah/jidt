@@ -33,4 +33,12 @@ public abstract class EffectiveMeasureCalculatorDiscrete {
 
     // TODO: Implement here.
     public abstract double computeForPartition(int[] p1);
+
+    /**
+     * Returns observations added to the calculator.
+     * @return data
+     */
+    public int[][] getData() {
+        return data;
+    }
 }
