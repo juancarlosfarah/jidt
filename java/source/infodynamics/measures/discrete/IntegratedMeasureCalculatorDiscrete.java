@@ -41,6 +41,10 @@ public abstract class IntegratedMeasureCalculatorDiscrete {
      */
     protected int[][] data;
     /**
+     * Shuffled data.
+     */
+    protected int[][] shuffled;
+    /**
      * Set of all partitions (in our case bipartitions
      * for efficiency's sake) that the system can have.
      */
@@ -65,9 +69,19 @@ public abstract class IntegratedMeasureCalculatorDiscrete {
      */
     protected double systemInformation;
     /**
+     * Stores the shuffled value of basic information measure (mutual
+     * information or conditional entropy) for the system so that it can be
+     * reused.
+     */
+    protected double shuffledInformation;
+    /**
      * Calculator to base the integrated measure on.
      */
     protected EffectiveMeasureCalculatorDiscrete baseCalculator;
+    /**
+     * Calculator to base the shuffled integrated measure on.
+     */
+    protected EffectiveMeasureCalculatorDiscrete shuffledCalculator;
 
     /**
      * Constructor.
@@ -82,6 +96,7 @@ public abstract class IntegratedMeasureCalculatorDiscrete {
 
     public void addObservations(int[][] data) {
         this.data = data;
+        this.shuffled = MatrixUtils.shuffle(data);
     }
 
     public void computePossiblePartitions() {
@@ -101,16 +116,20 @@ public abstract class IntegratedMeasureCalculatorDiscrete {
         double integratedInformation = 0.0;
         minimumInformationPartitionScore = Double.POSITIVE_INFINITY;
         baseCalculator.addObservations(data);
+        shuffledCalculator.addObservations(shuffled);
         systemInformation = baseCalculator.computeForSystem();
+        shuffledInformation = shuffledCalculator.computeForSystem();
 
         for (int[] partition : partitions) {
 
             double k = computeNormalizationFactor(partition);
-            double ei = baseCalculator.computeForPartition(partition);
+            double eiReal = baseCalculator.computeForPartition(partition);
+            double eiShuf = shuffledCalculator.computeForPartition(partition);
 
             // If k = 0, it means that one of the partitions has an entropy
             // of 0, which means that it doesn't tell us anything about the
             // rest of the system. Return 0 otherwise return normalised EI.
+            double ei = eiReal - eiShuf;
             double mipScore = (k == 0) ? 0 : ei / k;
 
             if (mipScore < minimumInformationPartitionScore) {
