@@ -15,6 +15,8 @@ public class IntegratedInformationCalculatorDiscrete
     public IntegratedInformationCalculatorDiscrete(int base, int tau) {
         super(base, tau);
         baseCalculator = new EffectiveInformationCalculatorDiscrete(base, tau);
+        shuffledCalculator = new EffectiveInformationCalculatorDiscrete(base,
+                                                                        tau);
     }
 
 }

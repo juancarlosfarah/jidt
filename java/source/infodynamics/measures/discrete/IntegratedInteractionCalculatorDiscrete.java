@@ -15,5 +15,7 @@ public class IntegratedInteractionCalculatorDiscrete
     public IntegratedInteractionCalculatorDiscrete(int base, int tau) {
         super(base, tau);
         baseCalculator = new StochasticInteractionCalculatorDiscrete(base, tau);
+        shuffledCalculator = new StochasticInteractionCalculatorDiscrete(base,
+                                                                         tau);
     }
 }
